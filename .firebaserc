@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "swd-healthcare": {
+      "hosting": {
+        "hospitalAngular": [
+          "swd-healthcare"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "swd-healthcare"
+  }
+}
