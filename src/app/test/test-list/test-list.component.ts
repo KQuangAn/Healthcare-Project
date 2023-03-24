@@ -55,12 +55,12 @@ export class TestListComponent implements OnInit {
   
     }
 
-    getTest(id:number){
+    getTest(id:string){
       this.router.navigate(['testUpdate',id]);
     }
 
     deleteTest(tName:String){
-      remove(ref(this.database,'test/' +tName));
+      remove(ref(this.database,'tests/' +tName));
       alert("removed");
       this.getList();
 

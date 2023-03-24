@@ -5,7 +5,7 @@ import { DoctorService } from '../service/Doctor/doctor.service';
 import { TestService } from '../service/test/test.service';
 import { TokenStorageService } from '../service/token-storage.service';
 import { Test } from './Test';
-import { getDatabase, ref, set, onValue, remove } from "firebase/database";
+import { getDatabase, ref, set, onValue, remove ,update} from "firebase/database";
 import { Database } from '@angular/fire/database';
 
 @Component({
@@ -25,9 +25,10 @@ export class TestComponent implements OnInit {
   ngOnInit(): void {
     this.renderer.setStyle(document.body, 'background-color', '#C3E6FC');
     if(this.tss.getToken()){
-      if(this.route.snapshot.params['id']>0){
+      if(this.route.snapshot.params['id']){
         this.id=this.route.snapshot.params['id'];
-        this.getTest();
+        this.test.tName=this.id;
+        //this.getTest();
       }
       this.getDoctorList();
     }
@@ -57,14 +58,32 @@ export class TestComponent implements OnInit {
   });
 }
 
-  onSubmit() {
-    console.log(this.test);
-    this.save();
+  async onSubmit() {
+    if(this.id!=null){
+      // update
+      alert("updating");
+      this.update(this.id);
+    }else{
+      alert("saving");
+      this.save();
+    }
     
   }
 
-  save(){
+  
+  update(tName:string){
+    const db = getDatabase();
+    update(ref(db, 'tests/' + this.test.tName), {
+      tName: this.test.tName,
+      tDate: this.test.tDate,
+      doctor: this.test.doctor
+    });
 
+    alert("test update successfully");
+    this.gotoNext();
+  }
+
+  save(){
     const db = getDatabase();
     set(ref(db, 'tests/' + this.test.tName), {
       tName: this.test.tName,
