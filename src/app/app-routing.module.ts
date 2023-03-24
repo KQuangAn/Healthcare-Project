@@ -25,6 +25,9 @@ import { SignUpComponent } from './sign-up/sign-up.component';
 import { AboutUsComponent } from './menu/about-us/about-us.component';
 import { ContactUsComponent } from './menu/contact-us/contact-us.component';
 import { InvoiceComponent } from './invoice/invoice.component';
+import { TestComponent } from './test/test.component';
+import { TestListComponent } from './test/test-list/test-list.component';
+import { TestDetailsComponent } from './test/test-details/test-details.component';
 
 const routes: Routes = [
 
@@ -64,6 +67,11 @@ const routes: Routes = [
   { path: 'specializationList' , component: SpecializationListComponent },
   { path: 'specializationUpdate/:id' , component: SpecializationComponent },
   { path: 'specializationDetail/:id' , component: SpecializationDetailsComponent },
+  
+  { path: 'test' , component: TestComponent },
+  { path: 'testList' , component: TestListComponent },
+  { path: 'testUpdate/:id' , component: TestComponent },
+  { path: 'testDetail/:id' , component: TestDetailsComponent },
   
   { path: 'patient' , component: PatientComponent },
   { path: 'patientList' , component: PatientListComponent },

@@ -52,11 +52,14 @@ export class DoctorListComponent implements OnInit {
   gotoDoctor() {
     this.router.navigate(['doctor']);
   }
-  getDoctor(id: number) {
+  getDoctor(id: string) {
     this.router.navigate(['doctorUpdate', id]);
   }
 
   deleteDoctor(dName: string) {
+    remove(ref(this.database,'doctors/' +dName));
+    alert("removed");
+  
     // this.ds.deleteDoctor(id).subscribe((response) => {
     //   console.log(response);
     //   alert('Doctor deleted');

@@ -16,12 +16,10 @@
   <div class="container">
     <table class="table table-striped table-bordered table-hover">
       <tr style="background: lightgreen">
-        <th>Id</th>
         <th>Name</th>
         <th>ACTIONS</th>
       </tr>
       <tr *ngFor="let spec of specList | specializationFilter : search">
-        <td>{{ spec.specId }}</td>
         <td>{{ spec.speciality }}</td>
         
         <td>

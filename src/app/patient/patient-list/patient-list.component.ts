@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { PatientService } from 'src/app/service/Patient/patient.service';
 import { TokenStorageService } from 'src/app/service/token-storage.service';
 import { Patient } from '../Patient';
-import { getDatabase, ref, set,onValue,remove } from "firebase/database";
+import { getDatabase, ref, set,onValue,remove ,update} from "firebase/database";
 import { Database } from '@angular/fire/database';
 @Component({
   selector: 'app-patient-list',
@@ -59,7 +59,7 @@ export class PatientListComponent implements OnInit {
     //   });
   }
 
-  getPatient(id:number){
+  getPatient(id:string){
     this.router.navigate(['patientUpdate', id]);
   }
 
@@ -67,6 +67,7 @@ export class PatientListComponent implements OnInit {
     remove(ref(this.database,'patients/' +pname));
     alert("removed");
   }
+  
 
   //   this.ps.deletePatient(id)
   //     .subscribe((response) => {

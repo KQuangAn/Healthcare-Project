@@ -34,10 +34,11 @@ export class DoctorComponent implements OnInit {
       if (this.route.snapshot.params['id']) {
         this.btn = 'Update';
         this.id = this.route.snapshot.params['id'];
-        this.getDoctor();
+        this.doc.doctorName = this.id;
+        //this.getDoctor();
       }
       //this.getDept();
-      //this.getSpec();
+      this.getSpec();
     } else {
       this.router.navigate(['login']);
     }
@@ -51,10 +52,15 @@ export class DoctorComponent implements OnInit {
   }
 
   getSpec() {
-    this.spSer.getAllSpecialization()
-      .subscribe(list => {
-        this.specList = list;
-      });
+
+      const startCountRef = ref(this.database, 'specialization/');
+    onValue(startCountRef, (snapshot) => {
+      const data: Specialization[] = Object.values(snapshot.val());
+      if (data != null) {
+        console.log(data);
+        this.specList = data;
+      }
+    })
   }
 
   getDoctor() {
@@ -67,24 +73,25 @@ export class DoctorComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.id > 0) {
-      this.update();
+    if (this.id!=null) {
+      this.update(this.id);
     } else {
       this.save();
       console.log(this.doc);
       this.check();
     }
   }
-  update() {
+  update(dName:string) {
 
 
     const db = getDatabase();
     update(ref(db, 'doctors/' + this.doc.doctorName), {
-      //dName: this.doc.doctorName,
       dAdd: this.doc.doctorAddress,
-      dMobileNo: this.doc.doctorPhoneNO
-      //,dSpec: this.doc.specialization
+      dMobileNo: this.doc.doctorPhoneNO,
+      dSpec: this.doc.specialization.speciality
     });
+    alert("Doctor updated successfully");
+    this.gotoNext();
 
     // this.ds.updateDoctor(this.id, this.doc).subscribe((data) => {
     //   console.log(data);
@@ -98,16 +105,16 @@ export class DoctorComponent implements OnInit {
   }
 
   check() {
-    this.ds.checkIsAvailable(this.doc)
-      .subscribe(res => {
-        console.log(res.available);
-        if (!res.available) {
-          this.save();
-        } else {
-          alert('Doctor already exists');
-        }
-      },
-        error => console.log(error));
+    // this.ds.checkIsAvailable(this.doc)
+    //   .subscribe(res => {
+    //     console.log(res.available);
+    //     if (!res.availßable) {
+    //       this.save();
+    //     } else {
+    //       alert('Doctor already exists');
+    //     }
+    //   },
+    //     error => console.log(error));
   }
 
   save() {
@@ -116,12 +123,12 @@ export class DoctorComponent implements OnInit {
     set(ref(db, 'doctors/' + this.doc.doctorName), {
       dName: this.doc.doctorName,
       dAdd: this.doc.doctorAddress,
-      dMobileNo: this.doc.doctorPhoneNO
-      //,dSpec: this.doc.specialization
+      dMobileNo: this.doc.doctorPhoneNO,
+      dSpec: this.doc.specialization.speciality
     });
 
     alert("Doctor added successfully");
-
+    this.gotoNext();
 
     // this.ds.addDoctor(this.doc).subscribe((data) => {
     //   console.log(data);

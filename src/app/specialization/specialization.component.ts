@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SpecializationService } from '../service/Specialization/specialization.service';
 import { TokenStorageService } from '../service/token-storage.service';
 import { Specialization } from './Specialization';
-
+import { getDatabase, ref, set, onValue,remove,update } from "firebase/database";
+import { Database } from '@angular/fire/database';
 @Component({
   selector: 'app-specialization',
   templateUrl: './specialization.component.html',
@@ -20,7 +21,7 @@ export class SpecializationComponent implements OnInit {
   showAdminBoard = false;
   private roles: string[];
 
-  constructor(private router: Router,private ss:SpecializationService,private route:ActivatedRoute, private tss: TokenStorageService, private renderer: Renderer2) { }
+  constructor(private database:Database,private router: Router,private ss:SpecializationService,private route:ActivatedRoute, private tss: TokenStorageService, private renderer: Renderer2) { }
 
   ngOnInit(): void {
     this.renderer.setStyle(document.body, 'background-color', '#C3E6FC');
@@ -63,16 +64,24 @@ export class SpecializationComponent implements OnInit {
   }
 
   save(){
-    this.ss.addSpecialization(this.spec)
-      .subscribe((data) => {
-        console.log(data);
-        alert('Specialization Added successfully');
-        this.gotoNext();
-      },
-      error => {
-        console.log(error);
-        alert('can not save your data');
-      })
+
+    const db = getDatabase();
+    set(ref(db, 'specialization/' + this.spec.speciality), {
+      speciality: this.spec.speciality,
+    });
+
+    alert("spec added successfully");
+    this.gotoNext();
+    // this.ss.addSpecialization(this.spec)
+    //   .subscribe((data) => {
+    //     console.log(data);
+    //     alert('Specialization Added successfully');
+    //     this.gotoNext();
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('can not save your data');
+    //   })
   }
   gotoNext(){
     this.router.navigate(['specializationList']);

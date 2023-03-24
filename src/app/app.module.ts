@@ -42,7 +42,11 @@ import { InvoiceComponent } from './invoice/invoice.component';
 import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { environment } from '../environments/environment';
 import { provideDatabase,getDatabase } from '@angular/fire/database';
+import { TestPipe } from './filter/test/test.pipe';
 
+import { TestComponent } from './test/test.component';
+import { TestListComponent } from './test/test-list/test-list.component';
+import { TestDetailsComponent } from './test/test-details/test-details.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,6 +56,7 @@ import { provideDatabase,getDatabase } from '@angular/fire/database';
     MedicosComponent,
     PatientComponent,
     SpecializationComponent,
+    TestComponent,
     DepartmentDetailsComponent,
     DepartmentListComponent,
     EmployeeDetailsComponent,
@@ -62,9 +67,12 @@ import { provideDatabase,getDatabase } from '@angular/fire/database';
     PatientDetailsComponent,
     SpecializationListComponent,
     SpecializationDetailsComponent,
+    TestListComponent,
+    TestDetailsComponent,
     DoctorListComponent,
     DoctorDetailsComponent,
     SpecializationPipe,
+    TestPipe,
     PatientPipe,
     OperationPipe,
     DepartmentPipe,

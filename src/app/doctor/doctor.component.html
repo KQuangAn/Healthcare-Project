@@ -46,11 +46,11 @@
 
     <!-- spec -->
     <div class="form-group">
-        <label for="specialization">Sepc Id</label>
-        <select name="specialization" class="form-control" [(ngModel)]="doc.specialization.specId">
+        <label for="specialization">speciality</label>
+        <select name="specialization" class="form-control" [(ngModel)]="doc.specialization.speciality">
             <!-- <option value="">Choose speciality</option> -->
-            <option [value]="spec.specId" *ngFor="let spec of specList">
-                {{spec.specId}} {{ spec.speciality }}
+            <option [value]="spec.speciality" *ngFor="let spec of specList">
+              {{ spec.speciality }}
             </option>
         </select>
     </div>

@@ -5,7 +5,7 @@ import { DoctorService } from '../service/Doctor/doctor.service';
 import { PatientService } from '../service/Patient/patient.service';
 import { TokenStorageService } from '../service/token-storage.service';
 import { Patient } from './Patient';
-import { getDatabase, ref, set,onValue } from "firebase/database";
+import { getDatabase, ref, set,onValue,remove,update } from "firebase/database";
 import { Database } from '@angular/fire/database';
 @Component({
   selector: 'app-patient',
@@ -13,7 +13,7 @@ import { Database } from '@angular/fire/database';
   styleUrls: ['./patient.component.css']
 })
 export class PatientComponent implements OnInit {
-
+  btn="save";
   pat: Patient = new Patient();
   id;
   monthstr:string;
@@ -23,7 +23,7 @@ export class PatientComponent implements OnInit {
   year:any;
 
   docList: Doctor[];
-
+  title= "Registration";
 
   constructor(private router: Router,
               private ps: PatientService,
@@ -38,13 +38,18 @@ export class PatientComponent implements OnInit {
     if(this.tss.getToken()){
       if(this.route.snapshot.params['id']){
         this.id = this.route.snapshot.params['id'];
-        this.getPatient();
+        this.pat.pName = this.id;
+        this.btn = 'Update';
+        this.title="Updating";
+        //this.getPatient();
       }
       this.setCal();
+      this.getDocs();
     }
     else{
       this.router.navigate(['login']);
     }
+    
   }
 
   setCal(){
@@ -64,31 +69,39 @@ export class PatientComponent implements OnInit {
   }
 
   getDocs(){
-    this.ds.getAllDoctor()
-      .subscribe(list => {
-        this.docList = list;
-      });
+    // this.ds.getAllDoctor()
+    //   .subscribe(list => {
+    //     this.docList = list;
+    //   });
+      const startCountRef = ref(this.database, 'doctors/');
+    onValue(startCountRef, (snapshot) => {
+      const data: Doctor[] = Object.values(snapshot.val());
+      if (data != null) {
+        console.log(data);
+        this.docList = data;
+      }
+
+  })
   }
 
 
 
   getPatient(){
-    this.ps.getPatientById(this.id)
-      .subscribe((data) => {
-        this.pat = data;
-      },
-      error => {
-        console.log(error);
-      });
+    // this.ps.getPatientById(this.id)
+    //   .subscribe((data) => {
+    //     this.pat = data;
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   });
   }
 
   onSubmit(){
-    if(this.id > 0){
+    if(this.id!=null){
       // update
       alert("updating");
-      this.update();
+      this.update(this.id);
     }else{
-      // save
       alert("saving");
       this.save();
       // this.check();
@@ -107,17 +120,27 @@ export class PatientComponent implements OnInit {
       error => console.log(error));
   }
 
-  update(){
-    this.ps.updatePatient(this.id, this.pat)
-      .subscribe((data) => {
-        console.log(data);
-        alert("patient updated successfully");
-        this.gotoNext();
-      },
-      error => {
-        console.log(error);
-        alert('can not updated your data');
-      });
+  update(pName:string){
+    const db = getDatabase();
+    update(ref(db, 'patients/' + pName), {
+      pAdd: this.pat.pAdd,
+      pDob: this.pat.pDob,
+      pMobileNo: this.pat.pMobileNo,
+      pDoc:this.pat.doc.doctorName
+    });
+
+    alert("patient update successfully");
+    this.gotoNext();
+    // this.ps.updatePatient(this.id, this.pat)
+    //   .subscribe((data) => {
+    //     console.log(data);
+    //     alert("patient updated successfully");
+    //     this.gotoNext();
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('can not updated your data');
+    //   });
   }
 
   save(){
@@ -127,21 +150,22 @@ export class PatientComponent implements OnInit {
       pName: this.pat.pName,
       pAdd: this.pat.pAdd,
       pDob: this.pat.pDob,
-      pMobileNo: this.pat.pMobileNo
+      pMobileNo: this.pat.pMobileNo,
+      pDoc :this.pat.doc.doctorName,
     });
 
     alert("patient registerd successfully");
-
-    this.ps.addPatient(this.pat)
-      .subscribe((data) => {
-        console.log(data);
-        alert("patient Registerd successfully");
-        this.gotoNext();
-      },
-      error => {
-        console.log(error);
-        alert('can not save your data');
-      });
+    this.gotoNext();
+    // this.ps.addPatient(this.pat)
+    //   .subscribe((data) => {
+    //     console.log(data);
+    //     alert("patient Registerd successfully");
+    //     this.gotoNext();
+    //   },
+    //   error => {
+    //     console.log(error);
+    //     alert('can not save your data');
+    //   });
   }
 
   gotoNext(){
